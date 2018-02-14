@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+from getpass import getpass
 import os, random
 from Crypto.Cipher import AES
 from Crypto.Hash import SHA256
@@ -7,7 +8,7 @@ def encrypt(key, filename):
 	chunksize = 64*1024
 	outputFile = '(encrypted)'+filename
 	filesize = str(os.path.getsize(filename)).zfill(16)
-	IV = "" 
+	IV = ""
 	for i in range(16):
 		IV += chr(random.randint(0,0xFF))
 	encryptor = AES.new(key, AES.MODE_CBC, IV)
@@ -42,15 +43,20 @@ def getKey(password):
 	hasher = SHA256.new(password)
 	return hasher.digest()
 def main():
+	print '#'*30
+	print '\tencrypt files'
+	print '#'*30+'\n'
 	choice = raw_input('world you like to (E)ncrypt or (D)ecrypt ? ')
 	if choice == 'E':
 		filename = raw_input('File to encrypt : ')
-		password = raw_input('Password : ')
+		passw = getpass('Password : ')
+		password = passw
 		encrypt(getKey(password), filename)
 		print "Done."
 	elif choice == 'D':
 		filename = raw_input('File to decrypt : ')
-		password = raw_input('Password : ')
+		passw = getpass('Password : ')
+		password = passw
 		decrypt(getKey(password), filename)
 		print "Done."
 	else:
